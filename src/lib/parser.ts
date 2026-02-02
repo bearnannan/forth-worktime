@@ -10,7 +10,7 @@ interface ParseResult {
 export async function analyzePdf(file: File, lang: 'en' | 'th' = 'th'): Promise<ParseResult> {
     // Dynamic import to prevent SSR issues
     const pdfJS = await import('pdfjs-dist');
-    // @ts-expect-error - Handle different export structures (default vs named)
+    // Handle different export structures (default vs named)
     const pdfLib = pdfJS.default || pdfJS;
     const { getDocument, GlobalWorkerOptions, version } = pdfLib;
 
