@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: radial-gradient(ellipse at top right, #F5F3FF, #F8FAFC, #FFFFFF);
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-card {
+    @apply bg-white/85 backdrop-blur-xl shadow-lg shadow-indigo-900/5 border border-white/40;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background-color: white !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-section {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0;
+    margin-top: 1rem;
+    padding: 0.75rem;
+  }
+}
