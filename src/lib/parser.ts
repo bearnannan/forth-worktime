@@ -15,7 +15,7 @@ export async function analyzePdf(file: File, lang: 'en' | 'th' = 'th'): Promise<
     const { getDocument, GlobalWorkerOptions, version } = pdfLib;
 
     if (typeof window !== 'undefined' && GlobalWorkerOptions) {
-        GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.js`;
+        GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
     }
 
     const arrayBuffer = await file.arrayBuffer();
