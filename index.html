@@ -45,6 +45,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <!-- SheetJS -->
+  <script defer src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
   <!-- Embedded CSS Styles -->
   <style>
@@ -204,18 +206,31 @@
             <div class="text-sm text-slate-500" data-i18n="totalNetHoursHeader">ชั่วโมงทำงานสุทธิรวม</div>
             <div id="report-total-hours" class="text-3xl font-bold text-indigo-600">0.00 ชม.</div>
           </div>
-          <button id="print-button"
-            class="px-5 py-2.5 mt-4 sm:mt-0 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold flex items-center gap-2 self-start sm:self-center no-print shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all text-sm"
-            data-i18n="printButton">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-              <path fill-rule="evenodd"
-                d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.552c.377.06.752.18 1.128.368a.75.75 0 11-.53 1.341c-.554-.22-1.158-.339-1.848-.339H5.25V4.5a.75.75 0 00-1.5 0v11.75A1.75 1.75 0 005.5 18h9a1.75 1.75 0 001.75-1.75V11a.75.75 0 00-1.5 0v4.25a.25.25 0 01-.25.25h-9a.25.25 0 01-.25-.25V4.5a.25.25 0 01.25-.25h.5V2.75z"
-                clip-rule="evenodd" />
-              <path
-                d="M10.25 6h1.5a2.25 2.25 0 012.25 2.25v1.5a.75.75 0 01-1.5 0v-1.5a.75.75 0 00-.75-.75h-1.5a.75.75 0 00-.75.75v9a.75.75 0 00.75.75h1.5a.75.75 0 00.75-.75V12a.75.75 0 011.5 0v3.75a2.25 2.25 0 01-2.25 2.25h-1.5a2.25 2.25 0 01-2.25-2.25v-9A2.25 2.25 0 0110.25 6z" />
-            </svg>
-            พิมพ์รายงาน
-          </button>
+          <div class="flex flex-wrap gap-3 self-start sm:self-center no-print mt-4 sm:mt-0">
+            <button id="export-button"
+              class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold flex items-center gap-2 shadow-lg shadow-emerald-200/50 hover:shadow-emerald-200/70 hover:scale-105 transition-all text-sm"
+              data-i18n="exportButton">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path
+                  d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
+                <path
+                  d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
+              </svg>
+              Export Excel
+            </button>
+            <button id="print-button"
+              class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold flex items-center gap-2 no-print shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all text-sm"
+              data-i18n="printButton">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd"
+                  d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.552c.377.06.752.18 1.128.368a.75.75 0 11-.53 1.341c-.554-.22-1.158-.339-1.848-.339H5.25V4.5a.75.75 0 00-1.5 0v11.75A1.75 1.75 0 005.5 18h9a1.75 1.75 0 001.75-1.75V11a.75.75 0 00-1.5 0v4.25a.25.25 0 01-.25.25h-9a.25.25 0 01-.25-.25V4.5a.25.25 0 01.25-.25h.5V2.75z"
+                  clip-rule="evenodd" />
+                <path
+                  d="M10.25 6h1.5a2.25 2.25 0 012.25 2.25v1.5a.75.75 0 01-1.5 0v-1.5a.75.75 0 00-.75-.75h-1.5a.75.75 0 00-.75.75v9a.75.75 0 00.75.75h1.5a.75.75 0 00.75-.75V12a.75.75 0 011.5 0v3.75a2.25 2.25 0 01-2.25 2.25h-1.5a2.25 2.25 0 01-2.25-2.25v-9A2.25 2.25 0 0110.25 6z" />
+              </svg>
+              พิมพ์รายงาน
+            </button>
+          </div>
         </div>
       </div>
 
@@ -366,8 +381,8 @@
 
           // Internationalization (i18n) Dictionary: เก็บข้อความทั้งหมดสำหรับ 2 ภาษา
           const i18nDict = {
-            en: { appTitle: "WorkTime Analyzer", appSubtitle: "Monthly OT & Work Summary Report", uploaderText: "Click to select a PDF file", uploaderFilename: "No file selected", loaderText: "Processing...", reportMonthHeader: "Summary for", totalNetHoursHeader: "Total Net Work Hours", otSummaryTitle: "OT Summary (Hours)", payCalcTitle: "OT Pay Calculation", monthlySalaryLabel: "Monthly Salary (THB/Month)", baseHoursLabel: "Base Hours per Month (e.g., 26×8)", effectiveRateLabel: "Effective Hourly Rate", otPayoutTitle: "OT Payout Summary (THB)", totalOtPayLabel: "Total OT Pay:", tableDate: "Date", tableInOut: "In-Out Time", tableNetHours: "Net (Hrs)", tableStatus: "Status", chartTitle: "Daily Net Work Hours Chart", footerText: "© 2025 WorkTime Analyzer (Vanilla JS) Pro Edition", errorPrefix: "Error: ", errorNoDate: "Could not find a valid date format (dd.mm.yyyy) in the document.", statusWeekend: "Weekend", statusHoliday: "Holiday", printButton: "Print Report" },
-            th: { appTitle: "WorkTime Analyzer", appSubtitle: "โปรแกรมสรุปเวลาทำงานและ OT (Monthly Report)", uploaderText: "คลิกเพื่อเลือกไฟล์ PDF", uploaderFilename: "ยังไม่ได้เลือกไฟล์", loaderText: "กำลังประมวลผล...", reportMonthHeader: "รายงานสรุปเดือน", totalNetHoursHeader: "ชั่วโมงทำงานสุทธิรวม", otSummaryTitle: "สรุป OT (หน่วย: ชั่วโมง)", payCalcTitle: "คำนวณค่าแรง OT", monthlySalaryLabel: "เงินเดือน (บาท/เดือน)", baseHoursLabel: "ชั่วโมงฐานต่อเดือน (เช่น 26×8)", effectiveRateLabel: "ค่าแรงต่อชั่วโมงที่ใช้คำนวณ", otPayoutTitle: "สรุปค่าแรง OT (บาท)", totalOtPayLabel: "รวมค่าแรง OT ทั้งหมด:", tableDate: "วันที่", tableInOut: "เวลาเข้า–ออก", tableNetHours: "ชม. (สุทธิ)", tableStatus: "สถานะ", chartTitle: "กราฟชั่วโมงทำงานสุทธิต่อวัน", footerText: "© 2025 WorkTime Analyzer (Vanilla JS) Pro Edition", errorPrefix: "เกิดข้อผิดพลาด: ", errorNoDate: "ไม่พบรูปแบบวันที่ (dd.mm.yyyy) ที่ถูกต้องในเอกสาร", statusWeekend: "วันหยุดสุดสัปดาห์", statusHoliday: "วันหยุดนักขัตฤกษ์", printButton: "พิมพ์รายงาน" }
+            en: { appTitle: "WorkTime Analyzer", appSubtitle: "Monthly OT & Work Summary Report", uploaderText: "Click to select a PDF file", uploaderFilename: "No file selected", loaderText: "Processing...", reportMonthHeader: "Summary for", totalNetHoursHeader: "Total Net Work Hours", otSummaryTitle: "OT Summary (Hours)", payCalcTitle: "OT Pay Calculation", monthlySalaryLabel: "Monthly Salary (THB/Month)", baseHoursLabel: "Base Hours per Month (e.g., 26×8)", effectiveRateLabel: "Effective Hourly Rate", otPayoutTitle: "OT Payout Summary (THB)", totalOtPayLabel: "Total OT Pay:", tableDate: "Date", tableInOut: "In-Out Time", tableNetHours: "Net (Hrs)", tableStatus: "Status", chartTitle: "Daily Net Work Hours Chart", footerText: "© 2025 WorkTime Analyzer (Vanilla JS) Pro Edition", errorPrefix: "Error: ", errorNoDate: "Could not find a valid date format (dd.mm.yyyy) in the document.", statusWeekend: "Weekend", statusHoliday: "Holiday", printButton: "Print Report", exportButton: "Export Excel" },
+            th: { appTitle: "WorkTime Analyzer", appSubtitle: "โปรแกรมสรุปเวลาทำงานและ OT (Monthly Report)", uploaderText: "คลิกเพื่อเลือกไฟล์ PDF", uploaderFilename: "ยังไม่ได้เลือกไฟล์", loaderText: "กำลังประมวลผล...", reportMonthHeader: "รายงานสรุปเดือน", totalNetHoursHeader: "ชั่วโมงทำงานสุทธิรวม", otSummaryTitle: "สรุป OT (หน่วย: ชั่วโมง)", payCalcTitle: "คำนวณค่าแรง OT", monthlySalaryLabel: "เงินเดือน (บาท/เดือน)", baseHoursLabel: "ชั่วโมงฐานต่อเดือน (เช่น 26×8)", effectiveRateLabel: "ค่าแรงต่อชั่วโมงที่ใช้คำนวณ", otPayoutTitle: "สรุปค่าแรง OT (บาท)", totalOtPayLabel: "รวมค่าแรง OT ทั้งหมด:", tableDate: "วันที่", tableInOut: "เวลาเข้า–ออก", tableNetHours: "ชม. (สุทธิ)", tableStatus: "สถานะ", chartTitle: "กราฟชั่วโมงทำงานสุทธิต่อวัน", footerText: "© 2025 WorkTime Analyzer (Vanilla JS) Pro Edition", errorPrefix: "เกิดข้อผิดพลาด: ", errorNoDate: "ไม่พบรูปแบบวันที่ (dd.mm.yyyy) ที่ถูกต้องในเอกสาร", statusWeekend: "วันหยุดสุดสัปดาห์", statusHoliday: "วันหยุดนักขัตฤกษ์", printButton: "พิมพ์รายงาน", exportButton: "ส่งออก Excel" }
           };
 
           // App State: เก็บสถานะทั้งหมดของแอปพลิเคชันไว้ในที่เดียว
@@ -394,6 +409,7 @@
             reportMonthYear: document.getElementById('report-month-year'),
             reportTotalHours: document.getElementById('report-total-hours'),
             printButton: document.getElementById('print-button'),
+            exportButton: document.getElementById('export-button'),
             printDate: document.getElementById('print-date'),
             otSummary: { o10: document.getElementById('summary-ot-10'), o15: document.getElementById('summary-ot-15'), o20: document.getElementById('summary-ot-20'), o30: document.getElementById('summary-ot-30') },
             pay: { monthlySalaryInput: document.getElementById('monthly-salary-input'), baseHoursInput: document.getElementById('base-hours-input'), effectiveRateDisplay: document.getElementById('effective-rate-display'), payout10: document.getElementById('payout-ot-10'), payout15: document.getElementById('payout-ot-15'), payout20: document.getElementById('payout-ot-20'), payout30: document.getElementById('payout-ot-30'), totalPayout: document.getElementById('total-ot-payout') },
@@ -730,6 +746,50 @@
 
           DOM.langThButton.addEventListener('click', () => { appState.lang = 'th'; updateUI_Language(); });
           DOM.langEnButton.addEventListener('click', () => { appState.lang = 'en'; updateUI_Language(); });
+
+          // Export Excel Config
+          const exportToExcel = () => {
+            if (!window.XLSX || !appState.data || appState.data.length === 0) return;
+            const lang = appState.lang;
+            const dict = i18nDict[lang];
+
+            // Prepare Header Row from Dict
+            const headers = [
+              dict.tableDate,
+              dict.tableInOut,
+              dict.tableNetHours,
+              "OT 1.0", "OT 1.5", "OT 2.0", "OT 3.0",
+              dict.tableStatus
+            ];
+
+            // Format Data
+            const sheetData = appState.data.map(d => {
+              const ot = appState.otInputs[d.day] || {};
+              return {
+                [headers[0]]: d.date,
+                [headers[1]]: d.inOut,
+                [headers[2]]: d.netHours,
+                [headers[3]]: ot.o10 || 0,
+                [headers[4]]: ot.o15 || 0,
+                [headers[5]]: ot.o20 || 0,
+                [headers[6]]: ot.o30 || 0,
+                [headers[7]]: d.status
+              };
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(sheetData);
+
+            // Auto-width (simple)
+            const wscols = headers.map(() => ({ wch: 15 }));
+            ws['!cols'] = wscols;
+
+            XLSX.utils.book_append_sheet(wb, ws, "Worktime");
+            const filename = `Worktime_${String(appState.monthIdx + 1).padStart(2, '0')}_${appState.year}.xlsx`;
+            XLSX.writeFile(wb, filename);
+          };
+
+          DOM.exportButton.addEventListener('click', exportToExcel);
 
           DOM.printButton.addEventListener('click', () => {
             const locale = appState.lang === 'th' ? 'th-TH' : 'en-US';
